@@ -7,7 +7,7 @@ Silly shitpost.
 
 We use python3 so install it bro.
 
-```python
+```bash
 mkvirtualenv --python=<path-to-python3-bin> chigolo_bot
 pip3 install -r requirements.txt
 ```
