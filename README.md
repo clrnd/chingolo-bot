@@ -1,4 +1,4 @@
-CHingolo Bot
+Chingolo Bot
 ============
 
 Silly shitpost.
