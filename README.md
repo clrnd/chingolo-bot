@@ -13,4 +13,9 @@ pip3 install -r requirements.txt
 ```
 
 ## Running
+
+From the virtualenv:
+
+```bash
 python run.py
+```
