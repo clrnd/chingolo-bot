@@ -13,20 +13,22 @@ except ImportError:
 def process(text):
     rgx = r'^/(?P<cmd>\w+)(?:@Chingolo_bot)?(?P<args> .*)?$'
     match = re.match(rgx, text)
-    if not match:
-        return None
-    else:
+    if match:
         cmd, args = match.groups()
         if args: args = args.strip()
 
-        print(cmd, args)
+        print('Got /{}: {}'.format(cmd, args))
 
         if cmd == 'help':
             return commands.help()
         elif cmd == 'js':
             return commands.js(args)
+        elif cmd == 'sadness':
+            return commands.sadness()
         else:
             return None
+    else:
+        return None
 
 
 def handle(bot, msg):
@@ -39,9 +41,13 @@ def handle(bot, msg):
     print(content_type, chat_type, chat_id)
 
     if content_type == 'text':
-        result = process(msg['text'])
-        if result:
-            bot.sendMessage(chat_id, **result)
+        act, result = process(msg['text'])
+        print('Sent {}: {}'.format(act, result))
+        if result and act:
+            if act == 'message':
+                bot.sendMessage(chat_id, **result)
+            if act == 'photo':
+                bot.sendPhoto(chat_id, **result)
 
 
 def main():
