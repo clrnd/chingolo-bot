@@ -20,11 +20,15 @@ def js(string):
         return None, None
 
 def sadness():
+    blogs = ['vaporwavedotorg.tumblr.com',
+             'vaporwave-z.tumblr.com',
+             'vaporwave.tumblr.com']
+    blog = random.choice(blogs)
+
     url = 'https://api.tumblr.com/v2/blog/{}/posts/photo?api_key={}'\
-            .format('vaporwave.tumblr.com', config.TUMBLR_KEY)
+            .format(blog, config.TUMBLR_KEY)
 
     r = requests.get(url)
-
     if r.ok:
         data = r.json()
         post = random.choice(data['response']['posts'])
