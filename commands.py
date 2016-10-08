@@ -5,10 +5,11 @@ import config
 
 def help():
     msg = """
-*Commands:*
+*Command list*
 
-`/js <library>`: checks if library is cool or not
-`/help`: return this
+`/js <library>` - checks if library is cool or not
+`/help` - return this
+`/sadness` - cry
     """
     return 'message', {'text': msg, 'parse_mode': 'Markdown'}
 
