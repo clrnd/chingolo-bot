@@ -12,7 +12,7 @@ except ImportError:
 
 def process(text):
     rgx = r'^/(?P<cmd>\w+)(?:@Chingolo_bot)?(?P<args> .*)?$'
-    match = re.match(rgx, text)
+    match = re.match(rgx, text, re.IGNORECASE)
     if match:
         cmd, args = match.groups()
         if args: args = args.strip()
@@ -26,9 +26,9 @@ def process(text):
         elif cmd == 'sadness':
             return commands.sadness()
         else:
-            return None
+            return None, None
     else:
-        return None
+        return None, None
 
 
 def handle(bot, msg):
