@@ -19,7 +19,7 @@ def js(string):
         return None, None
     elif re.match(r'macri', string, re.IGNORECASE):
         return 'message', {'text': '{} gato 😺'.format(string)}
-    else string:
+    else:
         return 'message', {'text': '{} is gay'.format(string)}
 
 def sadness():
