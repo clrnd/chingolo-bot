@@ -44,7 +44,6 @@ def handle(bot, msg):
 
     if content_type == 'text':
         act, result = process(msg['text'])
-        print('Sent {}: {}'.format(act, result))
         if result and act:
             if act == 'message':
                 bot.sendMessage(chat_id, **result)
