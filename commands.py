@@ -1,3 +1,4 @@
+import re
 import requests
 import random
 
@@ -14,10 +15,12 @@ def help():
     return 'message', {'text': msg, 'parse_mode': 'Markdown'}
 
 def js(string):
-    if string:
-        return 'message', {'text': '{} is gay'.format(string)}
-    else:
+    if not string:
         return None, None
+    elif re.match(r'macri', string, re.IGNORECASE):
+        return 'message', {'text': '{} gato 😺'.format(string)}
+    else string:
+        return 'message', {'text': '{} is gay'.format(string)}
 
 def sadness():
     blogs = ['vaporwavedotorg.tumblr.com',
