@@ -1,8 +1,10 @@
 import re
 import requests
 import random
+import shelve
 
 import config
+
 
 def help():
     msg = """
@@ -11,8 +13,10 @@ def help():
 `/js <library>` - checks if library is cool or not
 `/help` - return this
 `/sadness` - cry
+`/remember <keyword> <text>` - have memories
     """
     return 'message', {'text': msg, 'parse_mode': 'Markdown'}
+
 
 def js(string):
     if not string:
@@ -21,6 +25,7 @@ def js(string):
         return 'message', {'text': '{} gato 😺'.format(string)}
     else:
         return 'message', {'text': '{} is gay'.format(string)}
+
 
 def sadness():
     blogs = ['vaporwavedotorg.tumblr.com',
@@ -40,3 +45,26 @@ def sadness():
         return 'photo', {'photo': url, 'caption': text}
     else:
         return None, None
+
+
+def remember(string):
+    """ Splits on spaces and takes first
+        word as `keyword` rest as `body`.
+        If body is not empty store that in memory,
+        else return it.
+    """
+    if not string:
+        return None, None
+
+    with shelve.open('db', 'c') as db:
+        keyword, *body = string.split()
+        if body:
+            db[keyword] = ' '.join(body)
+            txt = 'I\'ll remember that'
+        else:
+            result = db.get(keyword, None)
+            if result:
+                txt = '{} = {}'.format(keyword, result)
+            else:
+                txt = 'No idea about {}'.format(keyword)
+    return 'message', {'text': txt}

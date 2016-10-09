@@ -25,6 +25,8 @@ def process(text):
             return commands.js(args)
         elif cmd == 'sadness':
             return commands.sadness()
+        elif cmd == 'remember':
+            return commands.remember(args)
         else:
             return None, None
     else:
