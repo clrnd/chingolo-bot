@@ -21,10 +21,17 @@ def help():
 def js(string):
     if not string:
         return None, None
-    elif re.match(r'macri', string, re.IGNORECASE):
-        return 'message', {'text': '{} gato 😺'.format(string)}
     else:
-        return 'message', {'text': '{} is gay'.format(string)}
+        r = requests.get("https://api.npms.io/v2/search?q={}".format(string))
+        if r.ok:
+            data = r.json()
+            popularity = data['results'][0]['score']['detail']['popularity']
+            if popularity > 0.90:
+                return 'message', {'text': '{} is what the cool kids are using'.format(string)}
+            else:
+                return 'message', {'text': '{} ?? That shit? Really?'.format(string)}
+        else:
+            return None, None
 
 
 def sadness():
