@@ -25,7 +25,10 @@ def js(string):
         r = requests.get("https://api.npms.io/v2/search?q={}".format(string))
         if r.ok:
             data = r.json()
-            popularity = data['results'][0]['score']['detail']['popularity']
+            if data['results']:
+                popularity = data['results'][0]['score']['detail']['popularity']
+            else:
+                return 'message', {'text': 'that shit don\'t exist nigga'}
             if popularity > 0.90:
                 return 'message', {'text': '{} is what the cool kids are using'.format(string)}
             else:
