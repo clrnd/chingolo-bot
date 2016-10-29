@@ -17,7 +17,8 @@ def process(text):
         cmd, args = match.groups()
         if args: args = args.strip()
 
-        print('Got /{}: {}'.format(cmd, args))
+        # causes error on some stdouts
+        # print('Got /{}: {}'.format(cmd, args))
 
         if cmd == 'help':
             return commands.help()
