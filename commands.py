@@ -43,7 +43,7 @@ def js(string):
         elif n > 10:
             m = 'burn your computer'
         else:
-            raise Exception('<commits suicide>');
+            m = 'Exception("<commits suicide>")'
 
         return tmpl.format(string, n, m)
 
