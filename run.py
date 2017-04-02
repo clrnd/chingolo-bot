@@ -7,7 +7,8 @@ import commands
 try:
     import config
 except ImportError:
-    raise 'Must create a `config.py` file with at least a TOKEN entry.'
+    raise Exception(
+            'Must create a `config.py` file with at least a TOKEN entry.')
 
 
 def process(text):
@@ -16,9 +17,6 @@ def process(text):
     if match:
         cmd, args = match.groups()
         if args: args = args.strip()
-
-        # causes error on some stdouts
-        # print('Got /{}: {}'.format(cmd, args))
 
         if cmd == 'help':
             return commands.help()

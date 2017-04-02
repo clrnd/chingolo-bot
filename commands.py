@@ -19,20 +19,45 @@ def help():
 
 
 def js(string):
+    def messages(p):
+        n = p*100
+        tmpl = '{} scores {:.1f} out of 100: {}'
+        if n > 90:
+            m = 'cool as fuck'
+        elif n > 80:
+            m = 'pretty ok'
+        elif n > 70:
+            m = 'meh'
+        elif n > 60:
+            m = 'old'
+        elif n > 50:
+            m = 'deprecated'
+        elif n > 40:
+            m = 'lol seriously?'
+        elif n > 30:
+            m = 'lol seriously?'
+        elif n > 20:
+            m = 'please die'
+        elif n > 20:
+            m = '...'
+        elif n > 10:
+            m = 'burn your computer'
+        else:
+            raise Exception('<commits suicide>');
+
+        return tmpl.format(string, n, m)
+
     if not string:
         return None, None
     else:
-        r = requests.get("https://api.npms.io/v2/search?q={}".format(string))
+        r = requests.get('https://api.npms.io/v2/search?q={}'.format(string))
         if r.ok:
             data = r.json()
             if data['results']:
-                popularity = data['results'][0]['score']['detail']['popularity']
+                pop = data['results'][0]['score']['detail']['popularity']
+                return 'message', {'text': messages(pop)}
             else:
-                return 'message', {'text': 'that shit don\'t exist nigga'}
-            if popularity > 0.90:
-                return 'message', {'text': '{} is what the cool kids are using'.format(string)}
-            else:
-                return 'message', {'text': '{} ?? That shit? Really?'.format(string)}
+                return 'message', {'text': 'No.'}
         else:
             return None, None
 
