@@ -13,6 +13,7 @@ def help():
 `/js <library>` - checks if library is cool or not
 `/help` - return this
 `/sadness` - cry
+`/puppy` - G O O D  D O G G O
 `/remember <keyword> <text>` - have memories
     """
     return 'message', {'text': msg, 'parse_mode': 'Markdown'}
