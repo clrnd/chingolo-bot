@@ -24,6 +24,8 @@ def process(text):
             return commands.js(args)
         elif cmd == 'sadness':
             return commands.sadness()
+        elif cmd == 'puppy':
+            return commands.puppy()
         elif cmd == 'remember':
             return commands.remember(args)
         else:
