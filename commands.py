@@ -103,3 +103,15 @@ def remember(string):
             else:
                 txt = 'No idea about {}'.format(keyword)
     return 'message', {'text': txt}
+
+def puppy():
+    url = 'https://imgur.com/r/puppies/hot.json'
+    r = requests.get(url)
+    if r.ok:
+        data = r.json()
+        img = random.choice(data['data'])
+        text = img['title']
+        url = 'https://imgur.com/{}{}'.format(img['hash'], img['ext'])
+        return 'photo', {'photo': url, 'caption': text}
+    else:
+        return None, None
