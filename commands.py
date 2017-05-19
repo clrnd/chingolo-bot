@@ -116,3 +116,13 @@ def puppy():
         return 'photo', {'photo': url, 'caption': text}
     else:
         return None, None
+
+def urban(string):
+    url = 'https://mashape-community-urban-dictionary.p.mashape.com/define?term={}.'.format(string)
+    r = requests.get(url, headers={'X-Mashape-Key':'GNy1l9QrcUmshewiEylj8w3VdCpVp1tbthojsnpeTXm87VYeaY'})
+    if r.ok:
+        data = r.json()
+        definition = data['list'][0]['definition']
+        return 'message', {'text': definition}
+    else:
+        return None, None
