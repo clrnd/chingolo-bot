@@ -122,7 +122,11 @@ def urban(string):
     r = requests.get(url, headers={'X-Mashape-Key':'GNy1l9QrcUmshewiEylj8w3VdCpVp1tbthojsnpeTXm87VYeaY'})
     if r.ok:
         data = r.json()
-        definition = data['list'][0]['definition']
-        return 'message', {'text': definition}
+        if data['result_type'] == 'exact':
+            definition = data['list'][0]['definition']
+            example = "Example: " + data['list'][0]['definition']
+            return 'message', {'text': definition + "\n" + example}
+        else:
+            return 'message', {'text': 'Nope'}
     else:
         return None, None
