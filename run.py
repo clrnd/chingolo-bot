@@ -28,6 +28,8 @@ def process(text):
             return commands.puppy()
         elif cmd == 'remember':
             return commands.remember(args)
+	elif cmd == 'urban':
+	    return commands.urban(args)
         else:
             return None, None
     else:
