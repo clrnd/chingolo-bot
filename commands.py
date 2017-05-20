@@ -126,7 +126,8 @@ def urban(string):
         if data['result_type'] == 'exact':
             print(data)
             definition = "*Definition:* " + data['list'][0]['definition']
-            example = "*Example:* " + data['list'][0]['example']
+            example = "*Example:* " + random.choice(data['list'])['example']
+            print (random.choice(data['list']))
             print(example)
             return 'message', {'text': definition + "\n" + example}
         else:
