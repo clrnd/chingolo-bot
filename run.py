@@ -49,7 +49,7 @@ def handle(bot, msg):
         act, result = process(msg['text'])
         if result and act:
             if act == 'message':
-                bot.sendMessage(chat_id, **result)
+                bot.sendMessage(chat_id, **result, parse_mode='Markdown')
             if act == 'photo':
                 bot.sendPhoto(chat_id, **result)
 
