@@ -15,6 +15,7 @@ def help():
 `/sadness` - cry
 `/puppy` - G O O D  D O G G O
 `/remember <keyword> <text>` - have memories
+`/urban <word>` - cool dict
     """
     return 'message', {'text': msg, 'parse_mode': 'Markdown'}
 
