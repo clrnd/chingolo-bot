@@ -124,7 +124,7 @@ def urban(string):
         data = r.json()
         if data['result_type'] == 'exact':
             definition = "*Definition:* " + data['list'][0]['definition']
-            example = "*Example:* " + data['list'][0]['example']
+            example = "*Example:* " + data['list'][0]['example'][0]
             return 'message', {'text': definition + "\n" + example}
         else:
             return 'message', {'text': 'Nope'}
