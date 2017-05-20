@@ -127,8 +127,6 @@ def urban(string):
             print(data)
             definition = "*Definition:* " + data['list'][0]['definition']
             example = "*Example:* " + random.choice(data['list'])['example']
-            print (random.choice(data['list']))
-            print(example)
             return 'message', {'text': definition + "\n" + example}
         else:
             return 'message', {'text': 'Nope'}
