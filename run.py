@@ -48,8 +48,10 @@ def handle(bot, msg):
     if content_type == 'text':
         act, result = process(msg['text'])
         if result and act:
+            if act == 'message-markdown':
+                bot.sendMessage(chat_id, parse_mode='Markdown', **result)
             if act == 'message':
-                bot.sendMessage(chat_id, **result, parse_mode='Markdown')
+                bot.sendMessage(chat_id, **result)
             if act == 'photo':
                 bot.sendPhoto(chat_id, **result)
 

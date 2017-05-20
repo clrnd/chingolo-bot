@@ -127,7 +127,7 @@ def urban(string):
             info = random.choice(data['list'])
             definition = "*Definition:* " + info['definition']
             example = "*Example:* " + info['example']
-            return 'message', {'text': definition + "\n" + example}
+            return 'message-markdown', {'text': definition + "\n" + example}
         else:
             return 'message', {'text': 'Nope'}
     else:
