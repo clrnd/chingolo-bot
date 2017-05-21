@@ -107,7 +107,8 @@ def remember(string):
     return 'message', {'text': txt}
 
 def puppy():
-    url = 'https://imgur.com/r/puppies/hot.json'
+    sub = 'doggos' if random.random() > 0.1 else 'boats'
+    url = 'https://imgur.com/r/{}/hot.json'.format(sub)
     r = requests.get(url)
     if r.ok:
         data = r.json()
