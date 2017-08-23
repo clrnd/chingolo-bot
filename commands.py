@@ -135,3 +135,15 @@ def urban(string):
             return 'message', {'text': 'Nope'}
     else:
         return None, None
+
+def vape(text):
+    def trans(c):
+        i = ord(c)
+        if ord('!') <= i <= ord('}'):
+            return chr(0xFF01 + i - ord('!'))
+        else:
+            return c
+    if text:
+        return 'message', {'text': ''.join(trans(c) for c in text)}
+    else:
+        return 'message', {'text': 'ｎｅｖｅｒｍｉｎｄ'}

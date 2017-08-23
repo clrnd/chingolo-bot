@@ -16,12 +16,15 @@ def process(text):
     match = re.match(rgx, text, re.IGNORECASE)
     if match:
         cmd, args = match.groups()
-        if args: args = args.strip()
+        if args:
+            args = args.strip()
 
         if cmd == 'help':
             return commands.help()
         elif cmd == 'js':
             return commands.js(args)
+        elif cmd == 'vape':
+            return commands.vape(args)
         elif cmd == 'sadness':
             return commands.sadness()
         elif cmd == 'puppy':
