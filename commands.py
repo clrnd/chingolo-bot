@@ -11,19 +11,20 @@ def help():
 *Command list*
 
 `/js <library>` - checks if library is cool or not
-`/help` - return this
+`/vape <text>` - A E S T H E T I C S
 `/sadness` - cry
-`/puppy` - G O O D  D O G G O
+`/puppy` - good doggo
 `/remember <keyword> <text>` - have memories
 `/urban <word>` - cool dict
+`/help` - return this
     """
     return 'message', {'text': msg, 'parse_mode': 'Markdown'}
 
 
 def js(string):
-    def messages(p):
-        n = p*100
-        tmpl = '{} scores {:.1f} out of 100: {}'
+    def messages(desc, pop):
+        n = pop*100
+        tmpl = '{}: {}.\nScore: {:.1f} out of 100, {}'
         if n > 90:
             m = 'cool as fuck'
         elif n > 80:
@@ -47,7 +48,7 @@ def js(string):
         else:
             m = 'Exception("<commits suicide>")'
 
-        return tmpl.format(string, n, m)
+        return tmpl.format(string, desc, n, m)
 
     if not string:
         return None, None
@@ -57,7 +58,8 @@ def js(string):
             data = r.json()
             if data['results']:
                 pop = data['results'][0]['score']['detail']['popularity']
-                return 'message', {'text': messages(pop)}
+                desc = data['results'][0]['package']['description']
+                return 'message', {'text': messages(desc, pop)}
             else:
                 return 'message', {'text': 'No.'}
         else:
