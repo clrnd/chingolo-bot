@@ -1,6 +1,9 @@
+import asyncio
 import re
 import time
 import telepot
+import telepot.aio
+from telepot.aio.loop import MessageLoop
 
 import commands
 
@@ -39,7 +42,7 @@ def process(text):
         return None, None
 
 
-def handle(bot, msg):
+async def handle(msg):
     """ Takes a message and acts accordingly.
 
         If not `text` type, do nothing.
@@ -51,26 +54,26 @@ def handle(bot, msg):
     if content_type == 'text':
         act, result = process(msg['text'])
         if result and act:
-            if act == 'message-markdown':
-                bot.sendMessage(chat_id, parse_mode='Markdown', **result)
+            if act == 'markdown':
+                await bot.sendMessage(chat_id, **result)
             if act == 'message':
-                bot.sendMessage(chat_id, **result)
+                await bot.sendMessage(chat_id, **result)
             if act == 'photo':
-                bot.sendPhoto(chat_id, **result)
+                await bot.sendPhoto(chat_id, **result)
+    else:
+        await bot.sendMessage(chat_id, text='🍌')
 
+bot = telepot.aio.Bot(config.TOKEN)
 
 def main():
     """ Set up `bot` and start the `message_loop`.
     """
-    bot = telepot.Bot(config.TOKEN)
 
-    bot.message_loop(lambda m: handle(bot, m))
+    loop = asyncio.get_event_loop()
+    loop.create_task(MessageLoop(bot, handle).run_forever())
     print('Running like crazy yo!')
 
-    # keep async code running until C-c
-    while True:
-        time.sleep(10)
-
+    loop.run_forever()
 
 if __name__ == "__main__":
     main()
