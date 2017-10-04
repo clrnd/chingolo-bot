@@ -121,7 +121,7 @@ async def urban(string):
         'X-Mashape-Key': 'GNy1l9QrcUmshewiEylj8w3VdCpVp1tbthojsnpeTXm87VYeaY'})
     if data['result_type'] == 'exact':
         info = random.choice(data['list'])
-        definition = '*Definition:* {}'.format(
+        definition = '*Definition:* {}\n'.format(
                 info['definition'].translate(markdown_escapes))
         example = '*Example:* {}'.format(
                 info['example'].translate(markdown_escapes))
