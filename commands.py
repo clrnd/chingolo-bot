@@ -3,7 +3,7 @@ import random
 import re
 import shelve
 
-from helpers import async_get
+from helpers import async_get, markdown_escapes
 
 
 def help():
@@ -122,9 +122,9 @@ async def urban(string):
     if data['result_type'] == 'exact':
         info = random.choice(data['list'])
         definition = '*Definition:* {}'.format(
-                info['definition'])
+                info['definition'].translate(markdown_escapes))
         example = '*Example:* {}'.format(
-                info['example'])
+                info['example'].translate(markdown_escapes))
         return 'message', {'text': definition + '\n' + example,
                            'parse_mode': 'Markdown'}
     else:

@@ -6,3 +6,9 @@ async def async_get(url, **kwargs):
                                      read_timeout=30) as session:
         async with session.get(url, **kwargs) as resp:
             return await resp.json()
+
+markdown_escapes = str.maketrans({
+    "`":  r"\`",
+    "*":  r"\*",
+    "_":  r"\_",
+    "[":  r"\["})
