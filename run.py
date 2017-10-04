@@ -1,11 +1,11 @@
-import asyncio
+import commands
 import re
 import time
+
+import asyncio
 import telepot
 import telepot.aio
 from telepot.aio.loop import MessageLoop
-
-import commands
 
 try:
     import config
@@ -14,7 +14,7 @@ except ImportError:
             'Must create a `config.py` file with at least a TOKEN entry.')
 
 
-def process(text):
+async def process(text):
     rgx = r'^/(?P<cmd>\w+)(?:@Chingolo_bot)?(?P<args> .*)?$'
     match = re.match(rgx, text, re.IGNORECASE)
     if match:
@@ -25,17 +25,19 @@ def process(text):
         if cmd == 'help':
             return commands.help()
         elif cmd == 'js':
-            return commands.js(args)
+            return await commands.js(args)
         elif cmd == 'vape':
             return commands.vape(args)
         elif cmd == 'sadness':
-            return commands.sadness()
+            return await commands.sadness()
         elif cmd == 'puppy':
-            return commands.puppy()
+            return await commands.puppy()
         elif cmd == 'remember':
             return commands.remember(args)
         elif cmd == 'urban':
-            return commands.urban(args)
+            return await commands.urban(args)
+        elif cmd == 'test':
+            return await commands.test(args)
         else:
             return None, None
     else:
@@ -52,10 +54,8 @@ async def handle(msg):
     print(content_type, chat_type, chat_id)
 
     if content_type == 'text':
-        act, result = process(msg['text'])
+        act, result = await process(msg['text'])
         if result and act:
-            if act == 'markdown':
-                await bot.sendMessage(chat_id, **result)
             if act == 'message':
                 await bot.sendMessage(chat_id, **result)
             if act == 'photo':

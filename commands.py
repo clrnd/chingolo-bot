@@ -1,9 +1,9 @@
-import re
-import requests
+import config
 import random
+import re
 import shelve
 
-import config
+from helpers import async_get
 
 
 def help():
@@ -21,7 +21,13 @@ def help():
     return 'message', {'text': msg, 'parse_mode': 'Markdown'}
 
 
-def js(string):
+async def test(args):
+    data = await async_get('http://localhost:8000/')
+    print(data)
+    return None, None
+
+
+async def js(string):
     def messages(desc, pop):
         n = pop*100
         tmpl = '{}: {}.\nScore: {:.1f} out of 100, {}'
@@ -53,35 +59,28 @@ def js(string):
     if not string:
         return None, None
     else:
-        r = requests.get('https://api.npms.io/v2/search?q={}'.format(string))
-        if r.ok:
-            data = r.json()
-            if data['results']:
-                pop = data['results'][0]['score']['detail']['popularity']
-                desc = data['results'][0]['package']['description']
-                return 'message', {'text': messages(desc, pop)}
-            else:
-                return 'message', {'text': 'No.'}
+        data = await async_get('https://api.npms.io/v2/search?q={}'.format(string))
+
+        if data['results']:
+            pop = data['results'][0]['score']['detail']['popularity']
+            desc = data['results'][0]['package']['description']
+            return 'message', {'text': messages(desc, pop)}
         else:
-            return None, None
+            return 'message', {'text': 'No.'}
 
 
-def sadness():
+async def sadness():
     sub = random.choice(['vaporwaveaesthetics',
                          'vaporwaveart',
                          'vaporwave'])
 
     url = 'https://imgur.com/r/{}/hot.json'.format(sub)
 
-    r = requests.get(url)
-    if r.ok:
-        data = r.json()
-        img = random.choice(data['data'])
-        text = img['title']
-        url = 'https://imgur.com/{}{}'.format(img['hash'], img['ext'])
-        return 'photo', {'photo': url, 'caption': text}
-    else:
-        return None, None
+    data = await async_get(url)
+    img = random.choice(data['data'])
+    text = img['title']
+    url = 'https://imgur.com/{}{}'.format(img['hash'], img['ext'])
+    return 'photo', {'photo': url, 'caption': text}
 
 
 def remember(string):
@@ -106,34 +105,30 @@ def remember(string):
                 txt = 'No idea about {}'.format(keyword)
     return 'message', {'text': txt}
 
-def puppy():
+async def puppy():
     sub = 'doggos' if random.random() > 0.1 else 'boats'
     url = 'https://imgur.com/r/{}/hot.json'.format(sub)
-    r = requests.get(url)
-    if r.ok:
-        data = r.json()
-        img = random.choice(data['data'])
-        text = img['title']
-        url = 'https://imgur.com/{}{}'.format(img['hash'], img['ext'])
-        return 'photo', {'photo': url, 'caption': text}
-    else:
-        return None, None
+    data = await async_get(url)
+    img = random.choice(data['data'])
+    text = img['title']
+    url = 'https://imgur.com/{}{}'.format(img['hash'], img['ext'])
+    return 'photo', {'photo': url, 'caption': text}
 
-def urban(string):
-    url = 'https://mashape-community-urban-dictionary.p.mashape.com/define?term={}.'.format(string)
-    r = requests.get(url, headers={'X-Mashape-Key':'GNy1l9QrcUmshewiEylj8w3VdCpVp1tbthojsnpeTXm87VYeaY'})
-    if r.ok:
-        data = r.json()
-        if data['result_type'] == 'exact':
-            info = random.choice(data['list'])
-            definition = "*Definition:* " + info['definition']
-            example = "*Example:* " + info['example']
-            return 'markdown', {'text': definition + "\n" + example,
-                                'parse_mode': 'Markdown'}
-        else:
-            return 'message', {'text': 'Nope'}
+async def urban(string):
+    url = ('https://mashape-community-urban-dictionary.p.mashape.com/'
+           'define?term={}.').format(string)
+    data = await async_get(url, headers={
+        'X-Mashape-Key': 'GNy1l9QrcUmshewiEylj8w3VdCpVp1tbthojsnpeTXm87VYeaY'})
+    if data['result_type'] == 'exact':
+        info = random.choice(data['list'])
+        definition = '*Definition:* {}'.format(
+                info['definition'])
+        example = '*Example:* {}'.format(
+                info['example'])
+        return 'message', {'text': definition + '\n' + example,
+                           'parse_mode': 'Markdown'}
     else:
-        return None, None
+        return 'message', {'text': 'Nope'}
 
 def vape(text):
     def trans(c):
