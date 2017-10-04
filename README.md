@@ -23,6 +23,16 @@ From the virtualenv:
 python run.py
 ```
 
+## Commands for pasting in @BotFather
+js - checks if library is cool or not
+vape - A E S T H E T I C S
+sadness - cry
+puppy - good doggo
+remember - have memories
+urban - cool dict
+money - exchange rate
+help - return this
+
 ## Testing
 
 Inside the virtualenv run `python` and just

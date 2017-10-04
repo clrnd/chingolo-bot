@@ -16,6 +16,7 @@ def help():
 `/puppy` - good doggo
 `/remember <keyword> <text>` - have memories
 `/urban <word>` - cool dict
+`/money <amount> <coin> to <coin>` - exchange rate
 `/help` - return this
     """
     return 'message', {'text': msg, 'parse_mode': 'Markdown'}
@@ -141,3 +142,30 @@ def vape(text):
         return 'message', {'text': ''.join(trans(c) for c in text)}
     else:
         return 'message', {'text': 'ｎｅｖｅｒｍｉｎｄ'}
+
+
+async def money(args):
+    try:
+        amount, fromcoin, _, tocoin, *_ = args.split(' ')
+        amount = float(amount)
+        fromcoin, tocoin = fromcoin.upper(), tocoin.upper()
+    except ValueError:
+        return 'message', {
+                'text': 'Wrong format.\nExample: /money 5.9 usd to ars'}
+
+    url = ('http://query.yahooapis.com/v1/public/yql?q='
+           'select * from yahoo.finance.xchange where pair = "{}{}"'
+           '&format=json&&env=store://datatables.org/alltableswithkeys')\
+       .format(fromcoin, tocoin)
+    data = await async_get(url)
+
+    try:
+        rate = float(data['query']['results']['rate']['Rate'])
+        return 'message', {
+                'text': '{amount} {fromcoin} = {result} {tocoin}'\
+                        .format(amount=amount,
+                                fromcoin=fromcoin,
+                                result=amount*rate,
+                                tocoin=tocoin)}
+    except (ValueError, KeyError):
+        return 'message', {'text': 'Unknow coin (probably).'}

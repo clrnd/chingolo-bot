@@ -36,6 +36,8 @@ async def process(text):
             return commands.remember(args)
         elif cmd == 'urban':
             return await commands.urban(args)
+        elif cmd == 'money':
+            return await commands.money(args)
         elif cmd == 'test':
             return await commands.test(args)
         else:
