@@ -1,7 +1,6 @@
-import commands
-import re
-import time
+from commands import Dispatcher
 
+import re
 import asyncio
 import telepot
 import telepot.aio
@@ -14,61 +13,60 @@ except ImportError:
             'Must create a `config.py` file with at least a TOKEN entry.')
 
 
-async def process(text):
+async def process(disp, text):
     rgx = r'^/(?P<cmd>\w+)(?:@Chingolo_bot)?(?P<args> .*)?$'
     match = re.match(rgx, text, re.IGNORECASE)
     if match:
         cmd, args = match.groups()
+
         if args:
             args = args.strip()
 
         if cmd == 'help':
-            return commands.help()
+            await disp.help()
         elif cmd == 'js':
-            return await commands.js(args)
+            await disp.js(args)
         elif cmd == 'vape':
-            return commands.vape(args)
+            await disp.vape(args)
         elif cmd == 'sadness':
-            return await commands.sadness()
+            await disp.sadness()
         elif cmd == 'puppy':
-            return await commands.puppy()
+            await disp.puppy()
         elif cmd == 'remember':
-            return commands.remember(args)
+            await disp.remember(args)
         elif cmd == 'urban':
-            return await commands.urban(args)
+            await disp.urban(args)
         elif cmd == 'money':
-            return await commands.money(args)
+            await disp.money(args)
+        elif cmd == 'shrek':
+            await disp.shrek()
         elif cmd == 'test':
-            return await commands.test(args)
+            await disp.test(args)
         else:
-            return None, None
+            pass
     else:
-        return None, None
+        pass
 
 
 async def handle(msg):
     """ Takes a message and acts accordingly.
 
-        If not `text` type, do nothing.
+        If not `text` type, banana.
         Otherwise, `process`.
     """
     content_type, chat_type, chat_id = telepot.glance(msg)
     print(content_type, chat_type, chat_id)
 
     if content_type == 'text':
-        act, result = await process(msg['text'])
-        if result and act:
-            if act == 'message':
-                await bot.sendMessage(chat_id, **result)
-            if act == 'photo':
-                await bot.sendPhoto(chat_id, **result)
+        disp = Dispatcher(bot, chat_id)
+        await process(disp, msg['text'])
     else:
         await bot.sendMessage(chat_id, text='🍌')
 
 bot = telepot.aio.Bot(config.TOKEN)
 
 def main():
-    """ Set up `bot` and start the `message_loop`.
+    """ Set up the `event_loop`.
     """
 
     loop = asyncio.get_event_loop()
