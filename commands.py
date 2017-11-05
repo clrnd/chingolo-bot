@@ -1,8 +1,9 @@
+import re
 import inspect
 import config
 import random
-import re
 import shelve
+from os import path
 
 from helpers import async_get, markdown_escapes, command
 
@@ -25,9 +26,10 @@ class Dispatcher:
         await self.bot.sendMessage(self.chat_id, msg, parse_mode='Markdown')
 
 
-    async def test(args):
-        data = await async_get('http://localhost:8000/')
-        print(data)
+    #@command('')
+    async def test(self, args):
+        #data = await async_get('http://localhost:8000/')
+        print(path.dirname(__file__))
 
 
     @command('`/js <library>` - checks if library is cool or not')
@@ -189,12 +191,13 @@ class Dispatcher:
             await self.bot.sendMessage(self.chat_id, 'Unknow coin (probably).')
 
     async def shrek(self):
-        if random.random() > 0.2:
+        if random.random() > 0.15:
             pack = await self.bot.getStickerSet('ShrekLitoris')
             sticker = random.choice(pack['stickers'])
             await self.bot.sendSticker(self.chat_id, sticker['file_id'])
         else:
-            with open('allstar.txt') as f:
+            fname = path.join(path.dirname(__file__), 'allstar.txt')
+            with open(fname) as f:
                 await self.bot.sendMessage(self.chat_id, f.read())
                 await self.bot.sendMessage(self.chat_id,
                         '`You have been Shrek\'d`', parse_mode='Markdown')
