@@ -9,6 +9,10 @@ from helpers import async_get, markdown_escapes, command
 
 
 class Dispatcher:
+    """ A simple unifying interface for commands.
+        The @command decorator provides metadata for the `/help`
+        endpoint.
+    """
 
     def __init__(self, bot, chat_id):
         self.bot = bot
@@ -165,26 +169,26 @@ class Dispatcher:
     @command('`/money <amount> <coin> to <coin>` - exchange rate')
     async def money(self, args):
         try:
-            amount, fromcoin, _, tocoin, *_ = args.split(' ')
+            amount, fromcoin, _, tocoin, *_ = re.split(r' +', args)
             amount = float(amount)
-            fromcoin, tocoin = fromcoin.upper(), tocoin.upper()
         except ValueError:
             await self.bot.sendMessage(self.chat_id,
                     'Wrong format.\nExample: /money 5.9 usd to ars')
             return
 
-        url = ('http://query.yahooapis.com/v1/public/yql?q='
-               'select * from yahoo.finance.xchange where pair = "{}{}"'
-               '&format=json&&env=store://datatables.org/alltableswithkeys')\
-           .format(fromcoin, tocoin)
+        fromcoin, tocoin = fromcoin.upper(), tocoin.upper()
+        url = 'http://data.fixer.io/api/latest?access_key={}'\
+                .format(config.FIXER_ACCESS_KEY)
         data = await async_get(url)
 
         try:
-            rate = float(data['query']['results']['rate']['Rate'])
+            from_rate = data['rates'][fromcoin]
+            to_rate = data['rates'][tocoin]
+            result = amount * to_rate / from_rate
             text = '{amount} {fromcoin} = {result} {tocoin}'.format(
                         amount=amount,
                         fromcoin=fromcoin,
-                        result=amount*rate,
+                        result=result,
                         tocoin=tocoin)
             await self.bot.sendMessage(self.chat_id, text)
         except (ValueError, KeyError):
