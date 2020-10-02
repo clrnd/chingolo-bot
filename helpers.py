@@ -8,12 +8,6 @@ async def async_get(url, **kwargs):
         async with session.get(url, **kwargs) as resp:
             return await resp.json()
 
-markdown_escapes = str.maketrans({
-    "`":  r"\`",
-    "*":  r"\*",
-    "_":  r"\_",
-    "[":  r"\["})
-
 def command(docstring):
     def wrapped(fn):
         @wraps(fn)

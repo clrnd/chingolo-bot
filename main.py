@@ -17,7 +17,6 @@ async def process(disp, text):
     rgx = r'^/(?P<cmd>\w+)(?:@AntikytheraBot)?(?P<args> .*)?$'
     match = re.match(rgx, text, re.IGNORECASE)
 
-    print(match)
     if not match: return
 
     cmd, args = match.groups()
@@ -27,10 +26,10 @@ async def process(disp, text):
 
     if cmd == 'help':
         await disp.help()
-    elif cmd == 'vape':
-        await disp.vape(args)
     elif cmd == 'sadness':
         await disp.sadness()
+    elif cmd == 'vape':
+        await disp.vape(args)
     elif cmd == 'exchange':
         await disp.exchange(args)
     elif cmd == 'welcome':
@@ -39,7 +38,7 @@ async def process(disp, text):
 
 async def handle(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
-    print(content_type, chat_type, chat_id, text)
+    print(content_type, chat_type, chat_id)
 
     disp = Dispatcher(bot, chat_id)
 

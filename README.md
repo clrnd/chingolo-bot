@@ -1,26 +1,22 @@
-Chingolo Bot
+Antikythera Bot
 ============
 
-Silly shitpost.
+El bot de Tecno Alienados
 
 ## Installing
 
-We use python3 so install it bro.
-
 ```bash
+pipenv --python 3
 pipenv install
 ```
 
 ## Running
 
-Then use `pipenv run python run.py`.
+`pipenv run python main.py`.
 
 ## Commands for pasting in @BotFather
-js - checks if library is cool or not
 vape - A E S T H E T I C S
 sadness - cry
-puppy - good doggo
-remember - have memories
-urban - cool dict
-money - exchange rate
+exchange - exchange rate
+welcome - envía el mensaje de bienvenida
 help - return this
