@@ -10,7 +10,7 @@ try:
     import config
 except ImportError:
     raise Exception(
-            'Must create a `config.py` file with at least a TOKEN entry.')
+        'Must create a `config.py` file with at least a TOKEN entry.')
 
 
 async def process(disp, text):
@@ -63,7 +63,9 @@ async def handle(msg):
     else:
         await bot.sendMessage(chat_id, text='🍌')
 
+
 bot = telepot.aio.Bot(config.TOKEN)
+
 
 def main():
     """ Set up the `event_loop`.
@@ -74,6 +76,7 @@ def main():
     print('Running like crazy yo!')
 
     loop.run_forever()
+
 
 if __name__ == "__main__":
     main()

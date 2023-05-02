@@ -29,17 +29,15 @@ class Dispatcher:
 
         await self.bot.sendMessage(self.chat_id, msg, parse_mode='Markdown')
 
-
-    #@command('')
+    # @command('')
     async def test(self, args):
-        #data = await async_get('http://localhost:8000/')
+        # data = await async_get('http://localhost:8000/')
         print(path.dirname(__file__))
-
 
     @command('`/js <library>` - checks if library is cool or not')
     async def js(self, string):
         def messages(desc, pop):
-            n = pop*100
+            n = pop * 100
             tmpl = '{}: {}.\nScore: {:.1f} out of 100, {}'
             if n > 90:
                 m = 'cool as fuck'
@@ -70,7 +68,7 @@ class Dispatcher:
             return
 
         data = await async_get(
-                'https://api.npms.io/v2/search?q={}'.format(string))
+            'https://api.npms.io/v2/search?q={}'.format(string))
 
         if data['results']:
             pop = data['results'][0]['score']['detail']['popularity']
@@ -79,21 +77,30 @@ class Dispatcher:
         else:
             await self.bot.sendMessage(self.chat_id, 'No')
 
-
     @command('`/sadness` - cry')
     async def sadness(self):
-        sub = random.choice(['vaporwaveaesthetics',
+        tag = random.choice(['vaporwaveaesthetic',
                              'vaporwaveart',
-                             'vaporwave'])
+                             'vaporwave',
+                             'lofiaesthetic',
+                             'aesthetics',
+                             '2000s',
+                             'y2k'])
 
-        url = 'https://imgur.com/r/{}/hot.json'.format(sub)
+        try:
+            api_url = 'https://api.tumblr.com/v2/tagged?tag={}&api_key={}' \
+                .format(tag, config.TUMBLR_API_KEY)
+            data = await async_get(api_url, headers={'User-Agent': 'HTTPie/3.2.1'})
 
-        data = await async_get(url)
-        img = random.choice(data['data'])
-        text = img['title']
-        url = 'https://imgur.com/{}{}'.format(img['hash'], img['ext'])
-        await self.bot.sendPhoto(self.chat_id, url, caption=text)
+            photo_posts = filter(lambda p: p['type'] == 'photo', data['response'])
+            post = random.choice(list(photo_posts))
+            img = random.choice(post['photos'])
 
+            caption = img['caption']
+            url = img['original_size']['url']
+            await self.bot.sendPhoto(self.chat_id, url, caption=caption)
+        except Exception as e:
+            await self.bot.sendMessage(self.chat_id, 'lol')
 
     @command('`/remember <keyword> <text>` - have memories')
     async def remember(self, string):
@@ -136,14 +143,14 @@ class Dispatcher:
         url = ('https://mashape-community-urban-dictionary.p.mashape.com/'
                'define?term={}.').format(string)
         data = await async_get(url, headers={'X-Mashape-Key':
-            'GNy1l9QrcUmshewiEylj8w3VdCpVp1tbthojsnpeTXm87VYeaY'})
+                                                 'GNy1l9QrcUmshewiEylj8w3VdCpVp1tbthojsnpeTXm87VYeaY'})
 
         if data['result_type'] == 'exact':
             info = random.choice(data['list'])
             definition = '*Definition:* {}\n'.format(
-                    info['definition'].translate(markdown_escapes))
+                info['definition'].translate(markdown_escapes))
             example = '*Example:* {}'.format(
-                    info['example'].translate(markdown_escapes))
+                info['example'].translate(markdown_escapes))
 
             await self.bot.sendMessage(self.chat_id,
                                        definition + '\n' + example,
@@ -159,12 +166,12 @@ class Dispatcher:
                 return chr(0xFF01 + i - ord('!'))
             else:
                 return c
+
         if text:
             await self.bot.sendMessage(self.chat_id,
                                        ''.join(trans(c) for c in text))
         else:
             await self.bot.sendMessage(self.chat_id, 'ｎｅｖｅｒｍｉｎｄ')
-
 
     @command('`/money <amount> <coin> to <coin>` - exchange rate')
     async def money(self, args):
@@ -173,12 +180,12 @@ class Dispatcher:
             amount = float(amount)
         except ValueError:
             await self.bot.sendMessage(self.chat_id,
-                    'Wrong format.\nExample: /money 5.9 usd to ars')
+                                       'Wrong format.\nExample: /money 5.9 usd to ars')
             return
 
         fromcoin, tocoin = fromcoin.upper(), tocoin.upper()
-        url = 'http://data.fixer.io/api/latest?access_key={}'\
-                .format(config.FIXER_ACCESS_KEY)
+        url = 'http://data.fixer.io/api/latest?access_key={}' \
+            .format(config.FIXER_ACCESS_KEY)
         data = await async_get(url)
 
         try:
@@ -186,10 +193,10 @@ class Dispatcher:
             to_rate = data['rates'][tocoin]
             result = amount * to_rate / from_rate
             text = '{amount} {fromcoin} = {result} {tocoin}'.format(
-                        amount=amount,
-                        fromcoin=fromcoin,
-                        result=result,
-                        tocoin=tocoin)
+                amount=amount,
+                fromcoin=fromcoin,
+                result=result,
+                tocoin=tocoin)
             await self.bot.sendMessage(self.chat_id, text)
         except (ValueError, KeyError):
             await self.bot.sendMessage(self.chat_id, 'Unknow coin (probably).')
@@ -204,4 +211,4 @@ class Dispatcher:
             with open(fname) as f:
                 await self.bot.sendMessage(self.chat_id, f.read())
                 await self.bot.sendMessage(self.chat_id,
-                        '`You have been Shrek\'d`', parse_mode='Markdown')
+                                           '`You have been Shrek\'d`', parse_mode='Markdown')
