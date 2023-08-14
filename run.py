@@ -1,10 +1,13 @@
-from commands import Dispatcher
-
-import re
 import asyncio
+import re
+
+import aiocron
+import aiohttp
 import telepot
 import telepot.aio
 from telepot.aio.loop import MessageLoop
+
+from commands import Dispatcher
 
 try:
     import config
@@ -65,6 +68,22 @@ async def handle(msg):
 
 
 bot = telepot.aio.Bot(config.TOKEN)
+
+
+@aiocron.crontab('0 14 * * *')
+async def notify_venta_pasajes_tren_mdq():
+    async with aiohttp.ClientSession(raise_for_status=True,
+                                     conn_timeout=30,
+                                     read_timeout=30) as session:
+        url = 'https://www.argentina.gob.ar/argentina.gob.ar/transporte/trenes-argentinos/horarios-tarifas-y' \
+              '-recorridos/servicios-regionales-larga-distancia/buenosaires-mardelplataf'
+
+        async with session.get(url) as resp:
+            result = await resp.text()
+
+    match = re.search(r'hasta el (.*)</strong>', result)
+    fecha = match.group(1)
+    await bot.sendMessage(8092568, 'Se pueden sacar pasajes hasta el {}'.format(fecha))
 
 
 def main():
