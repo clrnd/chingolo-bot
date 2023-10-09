@@ -70,7 +70,7 @@ async def handle(msg):
 bot = telepot.aio.Bot(config.TOKEN)
 
 
-@aiocron.crontab('0 14 * * *')
+@aiocron.crontab('0 14 * * *', start=False)
 async def notify_venta_pasajes_tren_mdq():
     async with aiohttp.ClientSession(raise_for_status=True,
                                      conn_timeout=30,
