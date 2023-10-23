@@ -1,4 +1,3 @@
-from functools import wraps
 import aiohttp
 
 
@@ -15,15 +14,3 @@ markdown_escapes = str.maketrans({
     "*": r"\*",
     "_": r"\_",
     "[": r"\["})
-
-
-def command(docstring):
-    def wrapped(fn):
-        @wraps(fn)
-        def wrapped_f(*args, **kwargs):
-            return fn(*args, **kwargs)
-
-        wrapped_f.docstring = docstring
-        return wrapped_f
-
-    return wrapped

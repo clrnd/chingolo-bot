@@ -5,8 +5,10 @@ name = "pypi"
 
 [packages]
 aiohttp = "*"
-telepot = "*"
 aiocron = "*"
+python-telegram-bot = "*"
+scrython = "*"
+nest-asyncio = "*"
 
 [dev-packages]
 

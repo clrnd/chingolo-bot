@@ -1,13 +1,15 @@
-import asyncio
+import logging
 import re
 
 import aiocron
 import aiohttp
-import telepot
-import telepot.aio
-from telepot.aio.loop import MessageLoop
+import nest_asyncio
+from telegram.ext import ApplicationBuilder, InlineQueryHandler
 
-from commands import Dispatcher
+from commands import Commands
+from mtg_search import inline_query_handler
+
+nest_asyncio.apply()
 
 try:
     import config
@@ -15,59 +17,10 @@ except ImportError:
     raise Exception(
         'Must create a `config.py` file with at least a TOKEN entry.')
 
-
-async def process(disp, text):
-    rgx = r'^/(?P<cmd>\w+)(?:@Chingolo_bot)?(?P<args> .*)?$'
-    match = re.match(rgx, text, re.IGNORECASE)
-    if match:
-        cmd, args = match.groups()
-
-        if args:
-            args = args.strip()
-
-        if cmd == 'help':
-            await disp.help()
-        elif cmd == 'js':
-            await disp.js(args)
-        elif cmd == 'vape':
-            await disp.vape(args)
-        elif cmd == 'sadness':
-            await disp.sadness()
-        elif cmd == 'puppy':
-            await disp.puppy()
-        elif cmd == 'remember':
-            await disp.remember(args)
-        elif cmd == 'urban':
-            await disp.urban(args)
-        elif cmd == 'money':
-            await disp.money(args)
-        elif cmd == 'shrek':
-            await disp.shrek()
-        elif cmd == 'test':
-            await disp.test(args)
-        else:
-            pass
-    else:
-        pass
-
-
-async def handle(msg):
-    """ Takes a message and acts accordingly.
-
-        If not `text` type, banana.
-        Otherwise, `process`.
-    """
-    content_type, chat_type, chat_id = telepot.glance(msg)
-    print(content_type, chat_type, chat_id)
-
-    if content_type == 'text':
-        disp = Dispatcher(bot, chat_id)
-        await process(disp, msg['text'])
-    else:
-        await bot.sendMessage(chat_id, text='🍌')
-
-
-bot = telepot.aio.Bot(config.TOKEN)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
 
 @aiocron.crontab('0 14 * * *', start=False)
@@ -83,18 +36,19 @@ async def notify_venta_pasajes_tren_mdq():
 
     match = re.search(r'hasta el (.*)</strong>', result)
     fecha = match.group(1)
-    await bot.sendMessage(8092568, 'Se pueden sacar pasajes hasta el {}'.format(fecha))
+    # await bot.sendMessage(8092568, 'Se pueden sacar pasajes hasta el {}'.format(fecha))
 
 
 def main():
-    """ Set up the `event_loop`.
-    """
+    print('🍌')
+    application = ApplicationBuilder().token(config.TOKEN).build()
 
-    loop = asyncio.get_event_loop()
-    loop.create_task(MessageLoop(bot, handle).run_forever())
-    print('Running like crazy yo!')
+    commands = Commands()
+    commands.add_handlers(application)
 
-    loop.run_forever()
+    application.add_handler(InlineQueryHandler(inline_query_handler))
+
+    application.run_polling()
 
 
 if __name__ == "__main__":
