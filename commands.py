@@ -5,6 +5,7 @@ import shelve
 from functools import wraps
 from os import path
 
+import scrython
 from telegram.ext import CommandHandler
 
 import config
@@ -47,6 +48,11 @@ class Commands:
             msg += f.help_text + '\n'
 
         await update.effective_chat.send_message(msg, parse_mode='Markdown')
+
+    @command('`/random` - rand card')
+    async def random(self, update, context):
+        card = scrython.cards.Random()
+        await update.effective_chat.send_photo(photo=card.image_uris()['normal'], caption=caption)
 
     # @command('')
     async def test(self, args):

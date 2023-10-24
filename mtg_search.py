@@ -20,7 +20,7 @@ async def inline_query_handler(update, context):
     results = [
         InlineQueryResultPhoto(
             id=result['id'],
-            photo_url=result['image_uris']['large'],
+            photo_url=result['image_uris']['normal'],
             thumbnail_url=result['image_uris']['small'],
         )
         for result in search.data()[:10]
