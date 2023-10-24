@@ -52,7 +52,7 @@ class Commands:
     @command('`/random` - rand card')
     async def random(self, update, context):
         card = scrython.cards.Random()
-        await update.effective_chat.send_photo(photo=card.image_uris()['normal'], caption=caption)
+        await update.effective_chat.send_photo(photo=card.image_uris()['normal'])
 
     # @command('')
     async def test(self, args):
