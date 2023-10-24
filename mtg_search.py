@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 import scrython
 from telegram import InlineQueryResultPhoto
@@ -14,7 +15,7 @@ async def inline_query_handler(update, context):
         search = scrython.cards.Search(q=query)
         await asyncio.sleep(1)
     except Exception as e:
-        print(e)
+        logging.error(e)
         return
 
     results = [
