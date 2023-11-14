@@ -21,16 +21,16 @@ async def inline_query_handler(update, context):
     results = [
         [
             InlineQueryResultPhoto(
-                id=result['illustration_id'],
+                id=result['id'],
                 photo_url=result['image_uris']['normal'],
                 thumbnail_url=result['image_uris']['small'],
             )
         ] if 'image_uris' in result else [
             InlineQueryResultPhoto(
-                id=face['illustration_id'],
+                id=result['id'] + str(i),
                 photo_url=face['image_uris']['normal'],
                 thumbnail_url=face['image_uris']['small'],
-            ) for face in result['card_faces']
+            ) for i, face in enumerate(result['card_faces'])
         ]
         for result in search.data()[:10]
     ]
